@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>3D焦点图</title>
+	<style>
+		*{margin:0;padding:0}
+		#carousel{
+			width: 500px;
+			height: 280px;
+			margin:100px auto 0;
+			position:relative;
+			perspective:600px;
+		}
+		#carousel li{
+			list-style-type:none;
+			position:absolute;
+			left:0;
+			top:0;
+			transition:all 1s;
+		}
+
+		.king{
+			z-index:9;
+		}
+		.right1{
+			transform:rotateY(-30deg) translateZ(-150px) translateX(100px);
+			z-index:8;
+		}
+		.right2{
+			transform:rotateY(-40deg) translateZ(-300px) translateX(200px);
+			z-index:7;
+		}
+		.left1{
+			transform:rotateY(30deg) translateZ(-150px) translateX(-100px);
+			z-index:8;
+		}
+		.left2{
+			transform:rotateY(40deg) translateZ(-300px) translateX(-200px);
+			z-index:7;
+		}
+		.bench-warmer{
+			transform:translateZ(-200px);
+			opacity:0;
+		}
+		#carousel span{
+			width: 60px;
+			height: 60px;
+			position:absolute;
+			left:-308px;
+			top:50%;
+			/*margin-top:-30px;*/
+			/*transform:translateY(-30px);*/
+			transform:translateY(-50%);   /*%是相对于自身宽高*/
+			z-index:10;
+			background-color: rgba(0, 0, 255, 0.4);
+			color:white;
+			text-align: center;
+			line-height: 60px;
+			font-size: 50px;
+			cursor:pointer;
+		}
+		#carousel span.right-btn{
+			right:-308px;
+			left:auto;
+		}
+	</style>
+	<script>
+		window.onload = function(){
+			var lock=false;   //锁。当动画执行的过程中，将lock设置true；当动画运行完毕的时候，解锁lock=false
+			var carousel = document.getElementById('carousel');
+			var carousel_lis = carousel.getElementsByTagName('li');  //各个面
+			var carousel_spans = carousel.getElementsByTagName('span');  //按钮
+			var classes = ['left2', 'left1', 'king', 'right1', 'right2', 'bench-warmer', 'bench-warmer','bench-warmer', 'bench-warmer' ];   //图片区域的类名组成的数组
+			console.log(classes);
+
+			//当单击向后按钮的时候,...
+			carousel_spans[1].onclick = function(e){
+				//先判断，是否处于动画中。如果不处于动画中(lock==false)，那么就可以执行动画
+				if(lock==false){   //未锁定，没有指定动画，这个时候，可以执行动画
+					
+
+					//先锁定lock，再执行动画
+					lock=true;
+
+					//单击的时候，将classes中的最后一个元素取出来，放在classes的最前面
+					var last_class = classes.pop();   //取出数组中的最后一个元素
+					classes.unshift( last_class );   //放在classes的最前面
+					console.log( classes );
+
+					for(var i=0; i<classes.length; i++){
+						carousel_lis[i].className = classes[i];
+					}
+
+					//当动画完毕的时候(1s后)，解锁
+					setTimeout(function(){
+						lock = false;
+					}, 1000);
+				}
+					
+			}
+
+			//当单击向前按钮的时候,...
+			carousel_spans[0].onclick = function(e){
+				if(lock==false){   //未锁定
+					lock = true;
+
+					//单击的时候，将classes中的第一个元素取出来，放在classes的最后面
+					var first_class = classes.shift();   //取出classes数组中的第一个元素
+					classes.push( first_class );   //放在classes的最后面
+
+					console.log(classes);
+
+					for(var i=0; i<classes.length; i++){
+						carousel_lis[i].className = classes[i];
+					}
+
+					//当动画执行完毕的时候，解锁
+					setTimeout(function(){
+						lock = false;
+					}, 1000);
+				}
+
+					
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="carousel">
+		<ul>
+			<li class="left2"><img src="images/50/1.jpg" alt=""></li>
+			<li class="left1"><img src="images/50/2.jpg" alt=""></li>
+			<li class="king"><img src="images/50/3.jpg" alt=""></li>
+			<li class="right1"><img src="images/50/4.jpg" alt=""></li>
+			<li class="right2"><img src="images/50/5.jpg" alt=""></li>
+			<li class="bench-warmer"><img src="images/50/6.jpg" alt=""></li>
+			<li class="bench-warmer"><img src="images/50/7.jpg" alt=""></li>
+			<li class="bench-warmer"><img src="images/50/8.jpg" alt=""></li>
+			<li class="bench-warmer"><img src="images/50/9.jpg" alt=""></li>
+		</ul>
+		<span>&lt;</span>
+		<span class="right-btn">&gt;</span>
+	</div>
+</body>
+</html>
